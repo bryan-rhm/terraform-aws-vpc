@@ -257,20 +257,8 @@ resource "aws_route_table" "database" {
   )
 }
 
-resource "aws_route" "database_internet_gateway" {
-  count = var.create_igw && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route && false == var.create_database_nat_gateway_route ? 1 : 0
-
-  gateway_id             = aws_internet_gateway.this[0].id
-  route_table_id         = aws_route_table.database[0].id
-  destination_cidr_block = "0.0.0.0/0"
-
-  timeouts {
-    create = "5m"
-  }
-}
-
 resource "aws_route" "database_nat_gateway" {
-  count = var.create_database_subnet_route_table && length(var.database_subnets) > 0 && false == var.create_database_internet_gateway_route && var.create_database_nat_gateway_route && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : length(var.database_subnets) : 0
+  count = var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_nat_gateway_route && var.enable_nat_gateway ? var.single_nat_gateway ? 1 : length(var.database_subnets) : 0
 
   route_table_id         = element(aws_route_table.database.*.id, count.index)
   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
@@ -282,7 +270,7 @@ resource "aws_route" "database_nat_gateway" {
 }
 
 resource "aws_route" "database_ipv6_egress" {
-  count = var.create_egress_only_igw && var.enable_ipv6 && var.create_database_subnet_route_table && length(var.database_subnets) > 0 && var.create_database_internet_gateway_route ? 1 : 0
+  count = var.create_egress_only_igw && var.enable_ipv6 && var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? 1 : 0
 
   route_table_id              = aws_route_table.database[0].id
   egress_only_gateway_id      = aws_egress_only_internet_gateway.this[0].id
