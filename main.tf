@@ -240,13 +240,13 @@ resource "aws_route_table" "private" {
 ################################################################################
 
 resource "aws_route_table" "database" {
-  count = var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 1 : length(var.database_subnets) : 0
+  count = var.create_database_subnet_route_table && length(var.database_subnets) > 0 ? var.single_nat_gateway ? 1 : length(var.database_subnets) : 0
 
   vpc_id = local.vpc_id
 
   tags = merge(
     {
-      "Name" = var.single_nat_gateway || var.create_database_internet_gateway_route ? "${var.name}-${var.database_subnet_suffix}" : format(
+      "Name" = var.single_nat_gateway ? "${var.name}-${var.database_subnet_suffix}" : format(
         "%s-${var.database_subnet_suffix}-%s",
         var.name,
         element(var.azs, count.index),
@@ -1042,7 +1042,7 @@ resource "aws_route_table_association" "database" {
   subnet_id = element(aws_subnet.database.*.id, count.index)
   route_table_id = element(
     coalescelist(aws_route_table.database.*.id, aws_route_table.private.*.id),
-    var.create_database_subnet_route_table ? var.single_nat_gateway || var.create_database_internet_gateway_route ? 0 : count.index : count.index,
+    var.create_database_subnet_route_table ? var.single_nat_gateway ? 0 : count.index : count.index,
   )
 }
 
