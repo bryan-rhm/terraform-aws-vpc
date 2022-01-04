@@ -421,4 +421,4 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_vpc"></a> [vpc](#output\_vpc) | VPC and subnet attributes |
+| <a name="output_output"></a> [vpc](#output\_output) | VPC and subnet attributes |
