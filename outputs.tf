@@ -1,4 +1,4 @@
-output "vpc" {
+output "output" {
   description = "VPC and subnet attributes"
   value       = {
     vpc                                   = aws_vpc.this
