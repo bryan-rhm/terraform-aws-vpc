@@ -5,7 +5,7 @@ output "output" {
     vpc_secondary_cidr_blocks             = aws_vpc_ipv4_cidr_block_association.this.*.cidr_block
     private_subnet_ids                    = aws_subnet.private.*.id
     private_subnet_arns                   = aws_subnet.private.*.arn
-    public_route_table_ids                = aws_route_table.private.*.id
+    private_route_table_ids               = aws_route_table.private.*.id
     private_subnets_cidr_blocks           = aws_subnet.private.*.cidr_block
     private_subnets_ipv6_cidr_blocks      = aws_subnet.private.*.ipv6_cidr_block
     public_subnet_ids                     = aws_subnet.public.*.id
